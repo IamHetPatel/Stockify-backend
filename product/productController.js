@@ -23,23 +23,14 @@ exports.addProduct = (req, res) => {
   });
 };
 
-exports.getProductsList = async (req, res) => {
-  try {
-    const id = req.decodedToken.result.user_id;
-    // console.log(`User_id: ${id}`);
-    getProducts((err, results) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      return res.status(200).json(results);
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: "0",
-      message: err.message,
-    });
-  }
+exports.getProductsList = (req, res) => {
+  getProducts((err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    return res.status(200).json(results);
+  });
 };
 
 exports.searchProduct = async (req, res) => {
@@ -55,9 +46,7 @@ exports.searchProduct = async (req, res) => {
         message: "Record not found",
       });
     }
-    return res.status(200).json({
-      success: 1,
-      data: results,
-    });
+    return res.status(200).json( results,
+    );
   });
 };
