@@ -9,13 +9,13 @@ const port = 3000 || process.env.PORT;
 const userRoutes = require("./user/userRoutes");
 const productRoutes = require("./product/productRoutes");
 const supplierRoutes = require("./supplier/supplierRoutes");
+// const orderRoutes = require("./order/orderRoutes");
 
-const orderRoutes = require("./order/orderRoutes");
 require("./db/conn");
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
-// app.use("/api/suppliers", supplierRoutes);
+app.use("/api/suppliers", supplierRoutes);
 // app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
