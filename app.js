@@ -3,8 +3,10 @@ const app = express();
 app.use(express.json());
 const dotenv = require("dotenv");
 const router = express.Router();
-// const cors = require("cors");
+const cors = require("cors");
 const port = 3000 || process.env.PORT;
+
+app.use(cors());
 
 const userRoutes = require("./user/userRoutes");
 const productRoutes = require("./product/productRoutes");
