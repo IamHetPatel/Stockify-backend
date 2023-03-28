@@ -2,10 +2,10 @@ const { createPool } = require("mysql2");
 require("dotenv").config();
 
 const db = createPool({
-  host: process.env.DB_host,
-  user: process.env.DB_user,
-  password: process.env.DB_password,
-  database: process.env.DB,
+  host: "db4free.net",
+  user: "inventory",
+  password: "nihal123",
+  database: "inventory_manage",
 });
 
 module.exports = db;

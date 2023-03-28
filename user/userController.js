@@ -6,11 +6,15 @@ const {
   deleteUser,
 } = require("./userQueries");
 
+
+const { genSaltSync, hashSync, compareSync } = require("bcrypt");
+const { sign } = require("jsonwebtoken");
+
 exports.createUser = (req, res) => {
   const body = req.body;
   const salt = genSaltSync(10);
   body.password = hashSync(body.password, salt);
-  create(body, (err, results) => {
+  createUser(body, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
@@ -25,8 +29,8 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.getAllUsers = (req, res) => {
-    getUsers((err, results) => {
+exports.getUsersList = (req, res) => {
+    getAllUsers((err, results) => {
       if (err) {
         console.log(err);
         return;
@@ -58,9 +62,9 @@ exports.getUserById = (req, res) => {
   });
 };
 
-exports.UpdateUser = (req, res) => {
+exports.updateUser = (req, res) => {
     const id = req.params.id;
-    getUserById(id, (err, results) => {
+    updateUser(id, (err, results) => {
       if (err) {
         console.log(err);
         return;
@@ -80,7 +84,7 @@ exports.UpdateUser = (req, res) => {
 
   exports.deleteUser = (req, res) => {
     const id = req.params.id;
-    getUserById(id, (err, results) => {
+    deleteUser(id, (err, results) => {
       if (err) {
         console.log(err);
         return;
@@ -101,7 +105,7 @@ exports.UpdateUser = (req, res) => {
 
 exports.login = (req, res) => {
   const body = req.body;
-  getUserByUserId(body.user_id, (err, results) => {
+  getUserById(body.user_id, (err, results) => {
     if (err) {
       console.log(err);
     }
