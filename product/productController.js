@@ -13,7 +13,7 @@ exports.addProduct = (req, res) => {
       console.log(err);
       return res.status(500).json({
         success: 0,
-        message: "DB connection error",
+        message: console.log(err),
       });
     }
     return res.status(200).json({
