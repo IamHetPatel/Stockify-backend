@@ -31,13 +31,13 @@ module.exports = {
   },
   searchProduct: (name, callback) => {
     db.query(
-      `select * from product where product_name like '%${name}%'`,
+      `select * from PRODUCT where product_name like '%${name}%'`,
       [name],
       (error, results, fields) => {
         if (error) {
           return callback(error);
         }
-        return callback(null, results[0]);
+        return callback(null, results);
       }
     );
   },

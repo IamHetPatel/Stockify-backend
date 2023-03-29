@@ -33,8 +33,8 @@ exports.getProductsList = (req, res) => {
   });
 };
 
-exports.searchProduct = async (req, res) => {
-  const name = req.params.product_name;
+exports.searchProduct = (req, res) => {
+  const name = req.params.name;
   searchProduct(name, (err, results) => {
     if (err) {
       console.log(err);

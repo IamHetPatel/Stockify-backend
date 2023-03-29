@@ -7,7 +7,7 @@ const app = express.Router();
 app.get("/", productController.getProductsList);
 app.post("/", productController.addProduct);
 app.get(
-  "/search-product",
+  "/search-product/:name",
   productController.searchProduct
 );
 
