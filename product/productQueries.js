@@ -11,7 +11,7 @@ module.exports = {
         data.MIN_QUANTITY,
         data.SUPPLIER_ID,
         data.SELLING_PRICE,
-        id
+        data.USER_ID
       ],
       (error, results, fields) => {
         if (error) {
