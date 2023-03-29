@@ -1,7 +1,7 @@
 const db = require("../db/conn");
 
 module.exports = {
-  createProduct: (data, id, callback) => {
+  createProduct: (data, callback) => {
     db.query(
       `insert into PRODUCT(PRODUCT_ID, PRODUCT_NAME, PRESENT_QUANTITY, MIN_QUANTITY, SUPPLIER_ID, SELLING_PRICE, USER_ID) values(?,?,?,?,?,?,?)`,
       [

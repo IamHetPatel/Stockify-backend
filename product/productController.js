@@ -6,9 +6,9 @@ const {
 
 exports.addProduct = (req, res) => {
   const body = req.body;
-  const id = req.decodedToken.result.user_id;
+  // const id = req.decodedToken.result.user_id;
   // console.log(id);
-  createProduct(body, id, (err, results) => {
+  createProduct(body, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
