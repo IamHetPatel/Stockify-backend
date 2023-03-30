@@ -105,6 +105,7 @@ exports.updateUser = (req, res) => {
 
 exports.login = (req, res) => {
   const body = req.body;
+  console.log(body)
   getUserById(body.user_id, (err, results) => {
     if (err) {
       console.log(err);
@@ -112,7 +113,7 @@ exports.login = (req, res) => {
     if (!results) {
       return res.json({
         success: 0,
-        data: "invalid user_id or password",
+        data: "improper input",
       });
     }
 
@@ -130,7 +131,7 @@ exports.login = (req, res) => {
     } else {
       return res.json({
         success: 0,
-        data: "invalid user_id or password",
+        result
       });
     }
   });
