@@ -22,10 +22,10 @@ exports.createSupplier = (data, callback) => {
   );
 };
 
-exports.getSupplierByName = (supplier_name, callback) => {
+exports.getSupplierByName = (name, callback) => {
   db.query(
-    `select * from SUPPLIER where NAME like '%${supplier_name}%'`,
-    [supplier_name],
+    `select * from SUPPLIER where NAME like '%${name}%'`,
+    [name],
     (error, results, fields) => {
       if (error) {
         return callback(error);
