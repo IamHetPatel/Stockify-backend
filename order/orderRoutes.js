@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const supplierController = require("../supplier/supplierController");
+const orderController = require("./orderController");
 
 const jwt_validation = require("./../auth/jwt_validation");
 
-router.get("/", jwt_validation.checkJwt, supplierController.getSuppliersList);
-router.post("/", jwt_validation.checkJwt, supplierController.createSupplier);
-router.get("/search-supplier", jwt_validation.checkJwt, supplierController.getSupplierBySupplierName);
-
+router.post("/", jwt_validation.checkJwt, orderController.addOrder);
+router.get("/",jwt_validation.checkJwt, orderController.getOrdersList)
 module.exports = router;
