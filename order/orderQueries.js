@@ -27,7 +27,10 @@ let date_ob = new Date(ts);
 };
 
 exports.getOrders = (id,callback) => {
-    db.query(`select * from ORDERS where USER_ID=?`, [id], (error, results, fields) => {
+    db.query(`SELECT O.ORDER_ID, P.PRODUCT_NAME, S.NAME,O.DATE, O.QUANTITY 
+    FROM ORDERS AS O 
+    JOIN PRODUCT AS P ON O.PRODUCT_ID=P.PRODUCT_ID 
+    JOIN SUPPLIER AS S ON O.SUPPLIER_ID = S.SUPPLIER_ID where O.USER_ID=?`, [id], (error, results, fields) => {
       if (error) {
         return callback(error);
       }
