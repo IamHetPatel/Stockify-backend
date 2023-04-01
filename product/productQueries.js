@@ -21,13 +21,17 @@ module.exports = {
       }
     );
   },
-    getProducts: (callback) => {
-    db.query(`select * from PRODUCT`, [], (error, results, fields) => {
-      if (error) {
-        return callback(error);
+  getProducts: (id, callback) => {
+    db.query(
+      `select * from PRODUCT where USER_ID =?`,
+      [id],
+      (error, results, fields) => {
+        if (error) {
+          return callback(error);
+        }
+        return callback(null, results);
       }
-      return callback(null, results);
-    });
+    );
   },
   searchProduct: (name, callback) => {
     db.query(

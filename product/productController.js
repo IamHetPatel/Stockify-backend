@@ -24,16 +24,24 @@ exports.addProduct = (req, res) => {
   });
 };
 
-exports.getProductsList = (req, res) => {
-  getProducts((err, results) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    return res.status(200).json(results);
-  });
+exports.getProductsList = async (req, res) => {
+  try {
+    // console.log("decodedToken", req.decodedToken);
+    const id = req.decodedToken.result.user_id;
+    getProducts(id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.status(200).json(results);
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "failed",
+      message: err.message,
+    });
+  }
 };
-
 exports.updateafter = async (req, res) => {
   const body = req.body;
   updateProductByOrder(body, (err, results) => {
