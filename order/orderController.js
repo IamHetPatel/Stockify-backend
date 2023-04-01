@@ -2,7 +2,9 @@ const { createOrder,getOrders } = require("./orderQueries");
 
 exports.addOrder = (req, res) => {
   const body = req.body;
-  createOrder(body, (err, results) => {
+  const id = req.decodedToken.result.user_id;
+  console.log(id)
+  createOrder(body,id,(err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
