@@ -20,7 +20,8 @@ exports.addOrder = (req, res) => {
 };
 
 exports.getOrdersList = (req, res) => {
-    getOrders((err, results) => {
+  const id = req.decodedToken.result.user_id
+    getOrders(id,(err, results) => {
       if (err) {
         console.log(err);
         return;

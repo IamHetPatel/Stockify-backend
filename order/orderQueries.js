@@ -19,8 +19,8 @@ exports.createOrder = (data, callback) => {
   );
 };
 
-exports.getOrders = (callback) => {
-    db.query(`select * from ORDERS`, [], (error, results, fields) => {
+exports.getOrders = (id,callback) => {
+    db.query(`select * from ORDERS where USER_ID=?`, [id], (error, results, fields) => {
       if (error) {
         return callback(error);
       }
