@@ -1,13 +1,20 @@
 const db = require("../db/conn");
 
 exports.createOrder = (data, callback) => {
+  let ts = Date.now();
+let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1; 
+  let year = date_ob.getFullYear();
+  let today = year + "-" + month + "-" + date 
+  console.log(year + "-" + month + "-" + date);
   db.query(
     `INSERT INTO ORDERS (ORDER_ID, PRODUCT_ID, SUPPLIER_ID, DATE, QUANTITY) values (?,?,?,?,?)`,
     [
       data.ORDER_ID,
       data.PRODUCT_ID,
       data.SUPPLIER_ID,
-      data.DATE,
+      today,
       data.QUANTITY,
     ],
     (error, results, fields) => {
