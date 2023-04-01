@@ -23,7 +23,8 @@ module.exports = {
   },
   getProducts: (id, callback) => {
     db.query(
-      `select * from PRODUCT where USER_ID =?`,
+      // `select * from PRODUCT where USER_ID =?`,
+      `SELECT P.PRODUCT_ID,P.PRODUCT_NAME,P.PRESENT_QUANTITY,P.MIN_QUANTITY,S.NAME, P.SELLING_PRICE FROM PRODUCT as P JOIN SUPPLIER as S ON P.SUPPLIER_ID = S.SUPPLIER_ID WHERE P.USER_ID=?;`,
       [id],
       (error, results, fields) => {
         if (error) {
