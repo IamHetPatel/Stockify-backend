@@ -7,7 +7,7 @@ exports.addOrder = (req, res) => {
 
   const productName = req.body.PRODUCT_NAME;
   const supplierName = req.body.SUPPLIER_NAME;
-  const sql1 = "SELECT product_id FROM PRODUCT WHERE PRODUCT_NAME = ?";
+  const sql1 = "SELECT PRODUCT_ID FROM PRODUCT WHERE PRODUCT_NAME = ?";
   const sql2 = "SELECT SUPPLIER_ID FROM SUPPLIER WHERE NAME = ?";
 
   db.query(sql1, [productName], (Proderr, Prodresult) => {
@@ -15,7 +15,9 @@ exports.addOrder = (req, res) => {
       console.log(Proderr);
       res.status(500).send("Error searching for product ID.");
     } else {
+      console.log(Prodresult)
       const productId = Prodresult[0].PRODUCT_ID;
+      console.log(productId)
 
       db.query(sql2, [supplierName], (Supperr, Suppresult) => {
         if (Supperr) {
