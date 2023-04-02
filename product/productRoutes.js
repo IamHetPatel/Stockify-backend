@@ -10,6 +10,6 @@ app.get(
   "/:name",jwt_validation.checkJwt,
   productController.searchProduct
 );
-app.patch("/update-product", productController.updateafter);
+app.patch("/update-product",jwt_validation.checkJwt, productController.updateafter);
 
 module.exports = app;
