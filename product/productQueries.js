@@ -54,6 +54,8 @@ module.exports = {
         if (error) {
           return callback(error);
         }
+        console.log(data.ORDER_ID)
+        console.log(data.PRODUCT_ID)
         return callback(null, results);
       }
     );

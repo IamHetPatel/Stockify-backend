@@ -2,7 +2,6 @@ const { createOrder,getOrders } = require("./orderQueries");
 const db = require("../db/conn");
 
 exports.addOrder = (req, res) => {
-  const body = req.body;
   const id = req.decodedToken.result.user_id;
 
   const productName = req.body.PRODUCT_NAME;
@@ -15,9 +14,7 @@ exports.addOrder = (req, res) => {
       console.log(Proderr);
       res.status(500).send("Error searching for product ID.");
     } else {
-      console.log(Prodresult)
       const productId = Prodresult[0].PRODUCT_ID;
-      console.log(productId)
 
       db.query(sql2, [supplierName], (Supperr, Suppresult) => {
         if (Supperr) {
@@ -34,7 +31,7 @@ exports.addOrder = (req, res) => {
           const sql = `INSERT INTO ORDERS (ORDER_ID, PRODUCT_ID, SUPPLIER_ID, DATE, QUANTITY, USER_ID) values (?,?,?,?,?,?)`;
           db.query(
             sql,
-            [body.ORDER_ID, productId, supplierId, today, body.QUANTITY, id],
+            [req.body.ORDER_ID, productId, supplierId, today, req.body.QUANTITY, id],
             (err, result) => {
               if (err) {
                 console.log(err);
@@ -42,7 +39,7 @@ exports.addOrder = (req, res) => {
               } else {
                 console.log("Order inserted successfully.");
                 res.json({
-                  "ORDER_ID":body.ORDER_ID,
+                  "ORDER_ID":req.body.ORDER_ID,
                   "PRODUCT_ID":productId
                 });
               }
