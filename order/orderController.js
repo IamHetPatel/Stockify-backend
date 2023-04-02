@@ -42,8 +42,8 @@ exports.addOrder = (req, res) => {
               } else {
                 console.log("Order inserted successfully."+body.ORDER_ID+productId);
                 res.json({
-                  "ORDER_ID":body.ORDER_ID,
-                  "PRODUCT_ID":productId
+                  "ORDER_ID":47,
+                  "PRODUCT_ID":1010
                 });
               }
             }
