@@ -10,6 +10,7 @@ exports.addOrder = (req, res) => {
 
   const sql1 = "SELECT product_id FROM PRODUCT WHERE PRODUCT_NAME = ?";
   const sql2 = "SELECT SUPPLIER_ID FROM SUPPLIER WHERE NAME = ?";
+  
   db.query(sql1, [productName], (Proderr, Prodresult) => {
     if (Proderr) {
       console.log(Proderr);

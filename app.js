@@ -17,6 +17,7 @@ const userRoutes = require("./user/userRoutes");
 const productRoutes = require("./product/productRoutes");
 const supplierRoutes = require("./supplier/supplierRoutes");
 const orderRoutes = require("./order/orderRoutes");
+const billRoutes = require("./billing/billRoutes");
 
 require("./db/conn");
 
@@ -24,6 +25,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/bills", billRoutes);
 
 app.get("/", (req, res) => {
   res.send(console.log("working"));
