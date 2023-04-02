@@ -41,7 +41,10 @@ exports.addOrder = (req, res) => {
                 res.status(500).send("Error inserting order.");
               } else {
                 console.log("Order inserted successfully.");
-                res.send("Order inserted successfully.");
+                res.json({
+                  "ORDER_ID":body.ORDER_ID,
+                  "PRODUCT_ID":productId
+                });
               }
             }
           );
