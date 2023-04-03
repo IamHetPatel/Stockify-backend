@@ -34,6 +34,18 @@ module.exports = {
       }
     );
   },
+  deleteProd: (id, callback) => {
+    db.query(
+      `delete from PRODUCT where product_id=?`,
+      [id],
+      (error, results, fields) => {
+        if (error) {
+          return callback(error);
+        }
+        return callback(null, results);
+      }
+    );
+  },
   searchProduct: (name, callback) => {
     db.query(
       `select * from PRODUCT where product_name like '%${name}%'`,
