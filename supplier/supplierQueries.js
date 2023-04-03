@@ -11,8 +11,8 @@ exports.getSupplier = (callback) => {
 
 exports.createSupplier = (data, callback) => {
   db.query(
-    `insert into SUPPLIER(SUPPLIER_ID,CONTACT_NO,NAME) values(?,?,?)`,
-    [data.SUPPLIER_ID, data.CONTACT_NO, data.NAME],
+    `insert into SUPPLIER(SUPPLIER_ID,CONTACT_NO,NAME,EmailID) values(?,?,?,?)`,
+    [data.SUPPLIER_ID, data.CONTACT_NO, data.NAME,data.EmailID],
     (error, results, fields) => {
       if (error) {
         return callback(error);

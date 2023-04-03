@@ -35,7 +35,6 @@ exports.createSupplier = (req, res) => {
 };
 exports.getSupplierBySupplierName = (req, res) => {
   const name = req.params.name;
-    console.log(name);
   getSupplierByName(name, async (err, results) => {
     try {
       const val = await results;
