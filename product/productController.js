@@ -44,7 +44,7 @@ exports.getProductsList = async (req, res) => {
 };
 exports.updateafter = async (req, res) => {
   const body = req.body;
-  console.log(body)
+  console.log(body.toString())
   updateProductByOrder(body, (err, results) => {
     if (err) {
       console.log(err);

@@ -1,6 +1,7 @@
 const { createOrder,getOrders } = require("./orderQueries");
 const db = require("../db/conn");
 
+
 exports.addOrder = (req, res) => {
   const id = req.decodedToken.result.user_id;
 
@@ -37,11 +38,21 @@ exports.addOrder = (req, res) => {
                 console.log(err);
                 res.status(500).send("Error inserting order.");
               } else {
-                console.log("Order inserted successfully.");
-                res.json({
-                  "ORDER_ID":req.body.ORDER_ID,
-                  "PRODUCT_ID":productId
-                });
+                db.query(`SELECT LAST_INSERT_ID() as ID;`,[],
+                (err,result)=>{
+                  if(err){
+                    console.log(err)
+                    res.status(500).send("Error getting ID")
+                  }
+                  else{
+                    console.log("Order inserted successfully.");
+                    res.json({
+                      "ORDER_ID":result[0].ID,//changes
+                      "PRODUCT_ID":productId
+                    });
+                  }
+                })
+                
               }
             }
           );
