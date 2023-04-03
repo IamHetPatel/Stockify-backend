@@ -19,6 +19,7 @@ exports.getSuppliersList = (req, res) => {
 
 exports.createSupplier = (req, res) => {
   const body = req.body;
+  console.log(req.body)
   createSupplier(body, (err, results) => {
     if (err) {
       console.log(err);
