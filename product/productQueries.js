@@ -72,4 +72,18 @@ module.exports = {
       }
     );
   },
+  updateProductByBill: (data, callback) => {
+    db.query(
+      `UPDATE PRODUCT SET PRESENT_QUANTITY = PRESENT_QUANTITY-(SELECT b.QUANTITY FROM bill as b where b.bill_number=?) WHERE PRODUCT_ID=?`,
+      [data.bill_number, data.PRODUCT_ID],
+      (error, results, fields) => {
+        if (error) {
+          return callback(error);
+        }
+        console.log(data.bill_number)
+        console.log(data.PRODUCT_ID)
+        return callback(null, results);
+      }
+    );
+  }
 };

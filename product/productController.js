@@ -3,7 +3,8 @@ const {
   getProducts,
   searchProduct,
   updateProductByOrder,
-  deleteProd
+  deleteProd,
+  updateProductByBill
 } = require("./productQueries");
 
 exports.addProduct = (req, res) => {
@@ -65,6 +66,24 @@ exports.updateafter = async (req, res) => {
   const body = req.body;
   console.log(body.toString())
   updateProductByOrder(body, (err, results) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: 0,
+        message: "Database connection error",
+      });
+    }
+    return res.status(200).json({
+      success: 1,
+      data: results,
+    });
+  });
+};
+
+exports.updatedecrease = async (req, res) => {
+  const body = req.body;
+  console.log(body.toString())
+  updateProductByBill(body, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500).json({
