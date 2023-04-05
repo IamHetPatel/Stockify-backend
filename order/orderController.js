@@ -1,6 +1,5 @@
-const { createOrder,getOrders } = require("./orderQueries");
+const { createOrder, getOrders } = require("./orderQueries");
 const db = require("../db/conn");
-
 
 exports.addOrder = (req, res) => {
   const id = req.decodedToken.result.user_id;
@@ -32,27 +31,35 @@ exports.addOrder = (req, res) => {
           const sql = `INSERT INTO ORDERS (ORDER_ID, PRODUCT_ID, SUPPLIER_ID, DATE, QUANTITY, USER_ID) values (?,?,?,?,?,?)`;
           db.query(
             sql,
-            [req.body.ORDER_ID, productId, supplierId, today, req.body.QUANTITY, id],
+            [
+              req.body.ORDER_ID,
+              productId,
+              supplierId,
+              today,
+              req.body.QUANTITY,
+              id,
+            ],
             (err, result) => {
               if (err) {
                 console.log(err);
                 res.status(500).send("Error inserting order.");
               } else {
-                db.query(`SELECT LAST_INSERT_ID() as ID;`,[],
-                (err,result)=>{
-                  if(err){
-                    console.log(err)
-                    res.status(500).send("Error getting ID")
+                db.query(
+                  `SELECT LAST_INSERT_ID() as ID;`,
+                  [],
+                  (err, result) => {
+                    if (err) {
+                      console.log(err);
+                      res.status(500).send("Error getting ID");
+                    } else {
+                      console.log("Order inserted successfully.");
+                      res.json({
+                        ORDER_ID: result[0].ID, //changes
+                        PRODUCT_ID: productId,
+                      });
+                    }
                   }
-                  else{
-                    console.log("Order inserted successfully.");
-                    res.json({
-                      "ORDER_ID":result[0].ID,//changes
-                      "PRODUCT_ID":productId
-                    });
-                  }
-                })
-                
+                );
               }
             }
           );
@@ -83,12 +90,12 @@ exports.addOrder = (req, res) => {
 // };
 
 exports.getOrdersList = (req, res) => {
-  const id = req.decodedToken.result.user_id
-    getOrders(id,(err, results) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      return res.status(200).json(results);
-    });
-  };
+  const id = req.decodedToken.result.user_id;
+  getOrders(id, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    return res.status(200).json(results);
+  });
+};

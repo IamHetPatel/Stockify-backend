@@ -27,7 +27,7 @@ const db = require("../db/conn");
 // };
 
 exports.getBills = (id,callback) => {
-    db.query(`select b.bill_number,b.cust_name,b.cust_contact,p.product_name,b.quantity,b.total_amount,b.date from bill as b join PRODUCT as p on b.product_id = p.product_id where p.USER_ID=?`, [id], (error, results, fields) => {
+    db.query(`select b.BILL_ID,b.cust_name,b.cust_contact,b.total_amount,b.date from BILLS as b`, [id], (error, results, fields) => {
       if (error) {
         return callback(error);
       }
