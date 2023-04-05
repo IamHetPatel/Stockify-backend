@@ -4,13 +4,13 @@ app.use(express.json());
 const dotenv = require("dotenv");
 const router = express.Router();
 const cors = require("cors");
-const port = 3000 || process.env.PORT;
+const port = 8001 || process.env.PORT;
 
 app.use(cors());
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 const userRoutes = require("./user/userRoutes");
