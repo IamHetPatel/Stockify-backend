@@ -89,6 +89,14 @@ exports.addBill = function (req, res) {
                       .json({ error: "Could not insert bill data." });
                   });
                   return;
+                } else {
+                  db.commit(function (err) {
+                    if (err) {
+                      db.rollback(function () {
+                        res.status(200).send("could not commit transaction");
+                      });
+                    }
+                  });
                 }
               }
             );
