@@ -68,7 +68,11 @@ exports.addBill = (req, res) => {
       } else {
         const BILL_ID = results.insertId;
         // Add bill items to database
+        console.log(BILL_ID)
+        console.log(req.body)
+        console.log(req.body.billItems)
         req.body.billItems.forEach((item) => {
+          console.log(item)
           db.query(
             `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
             [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
