@@ -54,39 +54,50 @@ const db = require("../db/conn");
 // })
 // };})}
 
-exports.addBill = (req, res) => {
+exports.addBill = function (req, res) {
   const { CUST_NAME, CUST_CONTACT } = req.body;
 
-  db.query(
-    `INSERT INTO BILLS (CUST_NAME, CUST_CONTACT, DATE)
-      VALUES (?, ?, NOW())`,
-    [CUST_NAME, CUST_CONTACT],
-    (err, results) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error adding bill");
-      } else {
-        const BILL_ID = results.insertId;
-        // Add bill items to database
-        console.log(BILL_ID)
-        console.log(req.body)
-        console.log(req.body.billItems)
-        req.body.billItems.forEach((item) => {
-          console.log(item)
-          db.query(
-            `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
-            [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
-            (err, results) => {
-              if (err) {
-                console.error(err);
-              }
-            }
-          );
-        });
-        res.status(200).send("Bill added successfully");
-      }
+  db.beginTransaction(function (err) {
+    if (err) {
+      res.status(500).json({ error: "Could not start transaction." });
+      return;
     }
-  );
+
+    db.query(
+      `INSERT INTO BILLS (CUST_NAME, CUST_CONTACT, DATE)
+        VALUES (?, ?, NOW())`,
+      [CUST_NAME, CUST_CONTACT],
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error adding bill");
+        } else {
+          const BILL_ID = results.insertId;
+          console.log(BILL_ID);
+          console.log(req.body);
+          console.log(req.body.billItems);
+          req.body.billItems.forEach((item) => {
+            console.log(item);
+            db.query(
+              `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
+              [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
+              (err, results) => {
+                if (err) {
+                  db.rollback(function () {
+                    res
+                      .status(500)
+                      .json({ error: "Could not insert bill data." });
+                  });
+                  return;
+                }
+              }
+            );
+          });
+          res.status(200).send("Bill added successfully");
+        }
+      }
+    );
+  });
 };
 
 //   const productName = req.body.PRODUCT_NAME;
