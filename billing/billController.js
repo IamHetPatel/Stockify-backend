@@ -79,31 +79,49 @@ exports.addBill = function (req, res) {
           let promises = [];
           req.body.billItems.forEach((item) => {
             console.log(item);
-            promises.push(new Promise((resolve, reject) => {
-              db.query(
-                `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
-                [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
-                (err, results) => {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve(results);
+            promises.push(
+              new Promise((resolve, reject) => {
+                db.query(
+                  `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
+                  [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
+                  (err, results) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve(results);
+                    }
                   }
-                }
-              );
-            }));
+                );
+              })
+            );
           });
           Promise.all(promises)
             .then((results) => {
-              db.commit(function (err) {
-                if (err) {
-                  db.rollback(function () {
-                    res.status(200).send("could not commit transaction");
-                  });
-                } else {
-                  res.status(200).send("Bill added successfully");
+              db.query(
+                `SELECT TOTAL_AMOUNT FROM BILLS WHERE BILL_ID = ?`,
+                [BILL_ID],
+                (err, results) => {
+                  if (err) {
+                    db.rollback(function () {
+                      res
+                        .status(500)
+                        .json({ error: "Could not retrieve total amount." });
+                    });
+                  } else {
+                    db.commit(function (err) {
+                      if (err) {
+                        db.rollback(function () {
+                          res.status(200).send("could not commit transaction");
+                        });
+                      } else {
+                        res
+                          .status(200)
+                          .json({TOTAL_AMOUNT: `${results[0].TOTAL_AMOUNT}`});
+                      }
+                    });
+                  }
                 }
-              });
+              );
             })
             .catch((err) => {
               db.rollback(function () {
