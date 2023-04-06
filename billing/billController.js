@@ -76,32 +76,40 @@ exports.addBill = function (req, res) {
           console.log(BILL_ID);
           console.log(req.body);
           console.log(req.body.billItems);
+          let promises = [];
           req.body.billItems.forEach((item) => {
             console.log(item);
-            db.query(
-              `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
-              [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
-              (err, results) => {
+            promises.push(new Promise((resolve, reject) => {
+              db.query(
+                `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
+                [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
+                (err, results) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(results);
+                  }
+                }
+              );
+            }));
+          });
+          Promise.all(promises)
+            .then((results) => {
+              db.commit(function (err) {
                 if (err) {
                   db.rollback(function () {
-                    res
-                      .status(500)
-                      .json({ error: "Could not insert bill data." });
+                    res.status(200).send("could not commit transaction");
                   });
-                  return;
                 } else {
-                  db.commit(function (err) {
-                    if (err) {
-                      db.rollback(function () {
-                        res.status(200).send("could not commit transaction");
-                      });
-                    }
-                  });
+                  res.status(200).send("Bill added successfully");
                 }
-              }
-            );
-          });
-          res.status(200).send("Bill added successfully");
+              });
+            })
+            .catch((err) => {
+              db.rollback(function () {
+                res.status(500).json({ error: "Could not insert bill data." });
+              });
+            });
         }
       }
     );
