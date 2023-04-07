@@ -75,20 +75,30 @@ exports.addBill = function (req, res) {
           const BILL_ID = results.insertId;
           console.log(BILL_ID);
           console.log(req.body);
-          console.log(req.body.billItems);
           let promises = [];
           req.body.billItems.forEach((item) => {
-            console.log(item);
             promises.push(
               new Promise((resolve, reject) => {
                 db.query(
-                  `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
-                  [BILL_ID, item.PRODUCT_ID, item.QUANTITY],
-                  (err, results) => {
+                  `SELECT PRODUCT_ID FROM PRODUCT WHERE PRODUCT_NAME = ?`,
+                  [item.PRODUCT_NAME],
+                  (err, nameresults) => {
                     if (err) {
                       reject(err);
                     } else {
-                      resolve(results);
+                      const PRODUCT_ID = nameresults[0].PRODUCT_ID;
+                      console.log(PRODUCT_ID)
+                      db.query(
+                        `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
+                        [BILL_ID, PRODUCT_ID, item.QUANTITY],
+                        (err, results) => {
+                          if (err) {
+                            reject(err);
+                          } else {
+                            resolve(results);
+                          }
+                        }
+                      );
                     }
                   }
                 );
