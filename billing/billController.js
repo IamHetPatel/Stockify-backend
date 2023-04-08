@@ -208,13 +208,41 @@ exports.addBill = function (req, res) {
 //   });
 // };
 
-exports.getBillsList = (req, res) => {
-  const id = req.decodedToken.result.user_id;
-  getBills(id, (err, results) => {
-    if (err) {
-      console.log(err);
-      return;
+exports.getBillsList = function (req, res) {
+  db.query(
+    `SELECT BILLS.CUST_NAME, BILLS.CUST_CONTACT, BILLS.DATE, BILLS.TOTAL_AMOUNT, BILL_DETAILS.QUANTITY, PRODUCT.PRODUCT_NAME 
+    FROM BILLS 
+    INNER JOIN BILL_DETAILS ON BILLS.BILL_ID = BILL_DETAILS.BILL_ID 
+    INNER JOIN PRODUCT ON BILL_DETAILS.PRODUCT_ID = PRODUCT.PRODUCT_ID 
+    GROUP BY BILLS.CUST_NAME, BILLS.CUST_CONTACT, BILLS.DATE, BILLS.TOTAL_AMOUNT, BILL_DETAILS.QUANTITY, PRODUCT.PRODUCT_NAME
+    `,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error retrieving bills");
+      } else {
+        const billsByCustomer = {};
+
+        results.forEach((row) => {
+          const { CUST_NAME, CUST_CONTACT, DATE, TOTAL_AMOUNT, PRODUCT_NAME, QUANTITY } = row;
+          if (!billsByCustomer[CUST_NAME]) {
+            billsByCustomer[CUST_NAME] = {
+              CUST_NAME,
+              CUST_CONTACT,
+              DATE,
+              TOTAL_AMOUNT,
+              billItems: [],
+            };
+          }
+          billsByCustomer[CUST_NAME].billItems.push({ PRODUCT_NAME, QUANTITY });
+        });
+
+        const bills = Object.values(billsByCustomer);
+
+        res.status(200).json(bills);
+      }
     }
-    return res.status(200).json(results);
-  });
+  );
 };
+
+
