@@ -1,5 +1,24 @@
 const { getBills } = require("./billQueries");
 const db = require("../db/conn");
+const nodemailer = require("nodemailer");
+require('dotenv').config({path: __dirname + '../.env'})
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+        secure: false,
+
+  auth: {
+    user: "moviesop99@gmail.com",
+    pass: process.env["NodeMAILER"],
+  },
+  tls: {
+    rejectUnauthorized: false
+  },
+  // increase the timeout value
+  timeout: 60000
+});
 
 // exports.addBill = (req, res) => {
 //   const { customer_name, customer_contact, product_name, quantity } = req.body;
@@ -80,28 +99,66 @@ exports.addBill = function (req, res) {
             promises.push(
               new Promise((resolve, reject) => {
                 db.query(
-                  `SELECT PRODUCT_ID FROM PRODUCT WHERE PRODUCT_NAME = ?`,
+                  `SELECT p.PRODUCT_ID, p.PRESENT_QUANTITY, p.MIN_QUANTITY, s.EmailID, p.USER_ID
+                   FROM PRODUCT p
+                   JOIN SUPPLIER s ON p.SUPPLIER_ID = s.SUPPLIER_ID
+                   WHERE p.PRODUCT_NAME = ?`,
                   [item.PRODUCT_NAME],
                   (err, nameresults) => {
                     if (err) {
                       reject(err);
                     } else {
                       const PRODUCT_ID = nameresults[0].PRODUCT_ID;
+                      const PRESENT_QUANTITY = nameresults[0].PRESENT_QUANTITY;
+                      const MIN_QUANTITY = nameresults[0].MIN_QUANTITY;
+                      const EmailID = nameresults[0].EmailID;
+                      const UserID = nameresults[0].USER_ID;
                       console.log(PRODUCT_ID)
-                      db.query(
-                        `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
-                        [BILL_ID, PRODUCT_ID, item.QUANTITY],
-                        (err, results) => {
-                          if (err) {
-                            reject(err);
+                      console.log(EmailID)
+                      if (PRESENT_QUANTITY < item.QUANTITY) {
+                        reject(`Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.`);
+                      } else if (PRESENT_QUANTITY < MIN_QUANTITY) {
+                        const mailOptions = {
+                          from: "hetp4c@gmail.com",
+                          to: EmailID,
+                          subject: `Product ${item.PRODUCT_NAME} is running low in stock`,
+                          text: `Dear supplier,\nThe present quantity of product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has fallen below the minimum quantity. Please restock as soon as possible.\n\nBest regards,\nRetailer ${UserID}`
+                        };
+                        transporter.sendMail(mailOptions, function(error, info) {
+                          if (error) {
+                            console.error(error);
                           } else {
-                            resolve(results);
+                            console.log("Email sent: " + info.response);
                           }
-                        }
-                      );
+                        });
+                        db.query(
+                          `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
+                          [BILL_ID, PRODUCT_ID, item.QUANTITY],
+                          (err, results) => {
+                            if (err) {
+                              reject(err);
+                            } else {
+                              resolve(results);
+                            }
+                          }
+                        );
+                      } else {
+                        db.query(
+                          `INSERT INTO BILL_DETAILS (BILL_ID, PRODUCT_ID, QUANTITY) VALUES (?, ?, ?)`,
+                          [BILL_ID, PRODUCT_ID, item.QUANTITY],
+                          (err, results) => {
+                            if (err) {
+                              reject(err);
+                            } else {
+                              resolve(results);
+                            }
+                          }
+                        );
+                      }
                     }
                   }
                 );
+                
               })
             );
           });
@@ -135,7 +192,7 @@ exports.addBill = function (req, res) {
             })
             .catch((err) => {
               db.rollback(function () {
-                res.status(500).json({ error: "Could not insert bill data." });
+                res.status(500).json({ error: "Could not insert bill data. " + err });
               });
             });
         }
@@ -143,6 +200,7 @@ exports.addBill = function (req, res) {
     );
   });
 };
+
 
 //   const productName = req.body.PRODUCT_NAME;
 //   const supplierName = req.body.SUPPLIER_NAME;
