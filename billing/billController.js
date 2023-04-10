@@ -119,7 +119,7 @@ exports.addBill = function (req, res) {
                         reject(`Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.`);
                       } else if (PRESENT_QUANTITY < MIN_QUANTITY) {
                         const mailOptions = {
-                          from: "hetp4c@gmail.com",
+                          from: "moviesop99@gmail.com",
                           to: EmailID,
                           subject: `Product ${item.PRODUCT_NAME} is running low in stock`,
                           text: `Dear supplier,\nThe present quantity of product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has fallen below the minimum quantity. Please restock as soon as possible.\n\nBest regards,\nRetailer ${UserID}`
