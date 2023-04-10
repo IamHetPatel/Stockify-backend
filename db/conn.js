@@ -1,10 +1,9 @@
 const mysql = require("mysql2");
-require('dotenv').config({path: __dirname + '../.env'})
 const db = mysql.createConnection({
-  host: "db4free.net",
-  user: "inventory",
-  password: "nihal123",
-  database: "inventory_manage",
+  host: process.env.DB_host,
+  user: process.env.DB_user,
+  password: process.env.DB_password,
+  database: process.env.DB,
 });
 
 module.exports = db;

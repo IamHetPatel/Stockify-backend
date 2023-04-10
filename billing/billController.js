@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
   auth: {
     user: "moviesop99@gmail.com",
-    pass: process.env["NodeMAILER"],
+    pass: process.env.NodeMAILER,
   },
   tls: {
     rejectUnauthorized: false
