@@ -80,28 +80,29 @@ exports.updateafter = async (req, res) => {
   });
 };
 
-exports.updatedecrease = async (req, res) => {
-  const body = req.body;
-  console.log(body.toString())
-  updateProductByBill(body, (err, results) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        success: 0,
-        message: "Database connection error",
-      });
-    }
-    return res.status(200).json({
-      success: 1,
-      data: results,
-    });
-  });
-};
+// exports.updatedecrease = async (req, res) => {
+//   const body = req.body;
+//   console.log(body.toString())
+//   updateProductByBill(body, (err, results) => {
+//     if (err) {
+//       console.log(err);
+//       return res.status(500).json({
+//         success: 0,
+//         message: "Database connection error",
+//       });
+//     }
+//     return res.status(200).json({
+//       success: 1,
+//       data: results,
+//     });
+//   });
+// };
 
 
 exports.searchProduct = (req, res) => {
+  const id = req.decodedToken.result.user_id;
   const name = req.params.name;
-  searchProduct(name, (err, results) => {
+  searchProduct(id,name, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(500);
@@ -112,7 +113,6 @@ exports.searchProduct = (req, res) => {
         message: "Record not found",
       });
     }
-    return res.status(200).json( results,
-    );
+    return res.status(200).json(results);
   });
 };

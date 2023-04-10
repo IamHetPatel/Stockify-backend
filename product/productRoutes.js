@@ -12,6 +12,6 @@ app.get(
 );
 app.delete("/delete/:id", productController.deleteProduct);
 app.patch("/update-product",jwt_validation.checkJwt, productController.updateafter);
-app.patch("/update-decrease",jwt_validation.checkJwt, productController.updatedecrease);
+// app.patch("/update-decrease",jwt_validation.checkJwt, productController.updatedecrease);
 
 module.exports = app;
