@@ -116,6 +116,7 @@ exports.addBill = function (req, res) {
                       console.log(PRODUCT_ID)
                       console.log(EmailID)
                       if (PRESENT_QUANTITY < item.QUANTITY) {
+                        res.status(400).json({ error: `Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.` });
                         reject(`Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.`);
                       } else if (PRESENT_QUANTITY < MIN_QUANTITY) {
                         const mailOptions = {
