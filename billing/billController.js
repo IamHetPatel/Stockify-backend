@@ -117,7 +117,7 @@ exports.addBill = function (req, res) {
                       console.log(EmailID)
                       if (PRESENT_QUANTITY < item.QUANTITY) {
                         res.status(400).json({ error: `Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.` });
-                        reject(`Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.`);
+                        // reject(`Product ${item.PRODUCT_NAME} with ID ${PRODUCT_ID} has lesser quantity than ordered.`);
                       } else if (PRESENT_QUANTITY < MIN_QUANTITY) {
                         const mailOptions = {
                           from: "moviesop99@gmail.com",
@@ -269,7 +269,7 @@ exports.addBill = function (req, res) {
 
 exports.getBillsList = function (req, res) {
   db.query(
-  `SELECT BILLS.CUST_NAME, BILLS.CUST_CONTACT, BILLS.DATE, BILLS.TOTAL_AMOUNT, BILL_DETAILS.QUANTITY, PRODUCT.PRODUCT_NAME 
+  `SELECT BILLS.BILL_ID, BILLS.CUST_NAME, BILLS.CUST_CONTACT, BILLS.DATE, BILLS.TOTAL_AMOUNT, BILL_DETAILS.QUANTITY, PRODUCT.PRODUCT_NAME, PRODUCT.SELLING_PRICE
    FROM BILLS 
    INNER JOIN BILL_DETAILS ON BILLS.BILL_ID = BILL_DETAILS.BILL_ID 
    INNER JOIN PRODUCT ON BILL_DETAILS.PRODUCT_ID = PRODUCT.PRODUCT_ID 
@@ -282,14 +282,17 @@ exports.getBillsList = function (req, res) {
       const bills = [];
       let currentCust = null;
       let currentBill = null;
+      let currentBillID = null;
+      let currentContact = null;
       
       results.forEach((row) => {
-        const { CUST_NAME, CUST_CONTACT, DATE, TOTAL_AMOUNT, PRODUCT_NAME, QUANTITY } = row;
+        const { BILL_ID,CUST_NAME, CUST_CONTACT, DATE, TOTAL_AMOUNT, PRODUCT_NAME, QUANTITY,SELLING_PRICE } = row;
         
-        if (CUST_NAME !== currentCust || CUST_CONTACT !== currentContact) {
+        if (CUST_NAME !== currentCust || CUST_CONTACT !== currentContact || BILL_ID !== currentBillID) {
           // Start a new bill for a new customer
           currentCust = CUST_NAME;
           currentContact = CUST_CONTACT;
+          currentBillID = BILL_ID;
           currentBill = {
             CUST_NAME,
             CUST_CONTACT,
@@ -301,7 +304,7 @@ exports.getBillsList = function (req, res) {
         }
         
         // Add the product to the current bill
-        currentBill.billItems.push({ PRODUCT_NAME, QUANTITY });
+        currentBill.billItems.push({ PRODUCT_NAME, QUANTITY, SELLING_PRICE });
       });
 
       res.status(200).json(bills);
