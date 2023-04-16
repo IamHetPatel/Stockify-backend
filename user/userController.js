@@ -123,6 +123,7 @@ exports.login = (req, res) => {
       const jsontoken = sign({ result: results }, "qwerty123", {
         expiresIn: "1h",
       });
+      console.log(results)
       return res.json({
         success: 1,
         message: "login successful",

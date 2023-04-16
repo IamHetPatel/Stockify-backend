@@ -1,9 +1,14 @@
 const express = require("express");
 const app = express();
+
 app.use(express.json());
 const dotenv = require("dotenv");
 const router = express.Router();
 const cors = require("cors");
+
+
+//middleware
+const {isAdmin,isUser} = require("./auth/middleware") 
 const port = 3306 || process.env.PORT;
 require('dotenv').config({path: __dirname + '/.env'})
 
@@ -24,9 +29,9 @@ require("./db/conn");
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/suppliers", supplierRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/bills", billRoutes);
+app.use("/api/suppliers",isAdmin, supplierRoutes);
+app.use("/api/orders",isAdmin, orderRoutes);
+app.use("/api/bills",isUser, billRoutes);
 
 app.get("/", (req, res) => {
   res.send(console.log("working"));

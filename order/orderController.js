@@ -1,4 +1,4 @@
-const { createOrder, getOrders } = require("./orderQueries");
+const { createOrder, getOrders,updateOrders } = require("./orderQueries");
 const db = require("../db/conn");
 
 exports.addOrder = (req, res) => {
@@ -99,3 +99,15 @@ exports.getOrdersList = (req, res) => {
     return res.status(200).json(results);
   });
 };
+
+exports.updateOrderStatus = (req,res) =>{
+  const status = req.body.status;
+  const order_id = req.body.order_id;
+    updateOrders(order_id,status, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    return res.status(200).json(results);
+  });
+}
