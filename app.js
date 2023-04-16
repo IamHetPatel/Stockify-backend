@@ -27,11 +27,11 @@ const billRoutes = require("./billing/billRoutes");
 
 require("./db/conn");
 
-app.use("/api/users", userRoutes);
+app.use("/api/users",isAdmin, userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/suppliers",isAdmin, supplierRoutes);
 app.use("/api/orders",isAdmin, orderRoutes);
-app.use("/api/bills",isUser, billRoutes);
+app.use("/api/bills", billRoutes);
 
 app.get("/", (req, res) => {
   res.send(console.log("working"));

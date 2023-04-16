@@ -120,10 +120,9 @@ exports.login = (req, res) => {
     const result = compareSync(body.password, results.password);
     if (result) {
       results.password = undefined;
-      const jsontoken = sign({ result: results }, "qwerty123", {
+      const jsontoken = sign({ result: results }, process.env.JWT_SECRET_KEY, {
         expiresIn: "1h",
       });
-      console.log(results)
       return res.json({
         success: 1,
         message: "login successful",

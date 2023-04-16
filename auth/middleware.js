@@ -12,7 +12,7 @@ function isAdmin(req, res, next) {
   }
   try {
     // Verify the token and decode the payload
-    const payload = jwt.verify(token, "qwerty123");
+    const payload = jwt.verify(token, JWT_SECRET_KEY);
 
     // Get the user's role from the payload
     const role = payload.result.ROLE;
@@ -38,7 +38,7 @@ function isUser(req, res, next) {
     }
     try {
       // Verify the token and decode the payload
-      const payload = jwt.verify(token, "qwerty123");
+      const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
   
       // Get the user's role from the payload
       const role = payload.result.ROLE;
