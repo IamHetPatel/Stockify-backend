@@ -3,8 +3,7 @@ const {
   getProducts,
   searchProduct,
   updateProductByOrder,
-  deleteProd,
-  updateProductByBill
+  deleteProd
 } = require("./productQueries");
 
 exports.addProduct = (req, res) => {

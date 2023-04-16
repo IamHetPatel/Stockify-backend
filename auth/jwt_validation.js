@@ -16,7 +16,6 @@ exports.checkJwt = async (req,res,next) =>{
                   message: "Token invalid",
                 });
               } else {
-                // console.log(decodedToken.result.user_id);
                 req.decodedToken = decodedToken;
                 next();
               }
