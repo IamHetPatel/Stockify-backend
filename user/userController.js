@@ -127,6 +127,7 @@ exports.login = (req, res) => {
       return res.json({
         success: 1,
         message: "login successful",
+        role: results.ROLE,
         token: jsontoken,
       });
     } else {
