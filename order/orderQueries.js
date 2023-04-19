@@ -28,10 +28,10 @@ exports.createOrder = (data, id, callback) => {
 
 exports.getOrders = (id, callback) => {
   db.query(
-    `SELECT O.ORDER_ID, P.PRODUCT_NAME, S.NAME,O.DATE,O.DATE_RECEIVED, O.QUANTITY, O.STATUS
+    `SELECT O.ORDER_ID, P.PRODUCT_NAME, S.NAME,O.DATE,O.DATE_RECEIVED, O.QUANTITY, O.STATUS, O.USER_ID
     FROM ORDERS AS O 
     JOIN PRODUCT AS P ON O.PRODUCT_ID=P.PRODUCT_ID 
-    JOIN SUPPLIER AS S ON O.SUPPLIER_ID = S.SUPPLIER_ID where O.USER_ID=?`,
+    JOIN SUPPLIER AS S ON O.SUPPLIER_ID = S.SUPPLIER_ID`,
     [id],
     (error, results, fields) => {
       if (error) {
