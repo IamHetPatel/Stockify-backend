@@ -9,7 +9,7 @@ exports.checkJwt = async (req,res,next) =>{
         ) {
           token = req.headers.authorization.split(" ")[1];
           if (token) {
-            verify(token, "qwerty123", (err, decodedToken) => {
+            verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
               if (err) {
                 res.status(400).json({
                   success: false,
