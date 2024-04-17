@@ -108,6 +108,18 @@ exports.updateOrderStatus = (req,res) =>{
       console.log(err);
       return;
     }
+    db.query(
+      `SELECT PRODUCT_ID
+      FROM ORDERS WHERE ORDER_ID=?`,
+      [id],
+      (error, results, fields) => {
+        if (error) {
+          return callback(error);
+        }
+        return callback(null, results);
+      }
+    );
+    // 
     return res.status(200).json(results);
   });
 }
